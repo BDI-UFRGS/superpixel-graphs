@@ -1,0 +1,1 @@
+Epoch,Accuracy,Precision (micro),Precision (macro),Precision (weighted),Recall (micro),Recall (macro),Recall (weighted),F-measure (micro),F-measure (macro),F-measure (weighted),Avg loss
