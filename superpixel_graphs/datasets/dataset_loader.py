@@ -4,7 +4,6 @@ import cifar10_slic
 import cifar100_slic
 import stl10_slic
 import stanfordcars_slic
-import geo_ds_slic
  
 import numpy as np
 import torch

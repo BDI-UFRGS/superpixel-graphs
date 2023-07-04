@@ -1,4 +1,4 @@
-#include "compute_features.h"
+#include "graph_builder.h"
 
 #include <iostream>
 #include <cmath>
@@ -6,7 +6,7 @@
 #include <set>
 #include <utility>
 
-cv::Mat grayscale_features(cv::Mat s, int n, cv::Mat img)
+cv::Mat greyscale_features(cv::Mat s, int n, cv::Mat img)
 {
     cv::Mat s1 = cv::Mat::zeros(n, 1, CV_64F),
             s2 = cv::Mat::zeros(n, 1, CV_64F),
@@ -30,7 +30,7 @@ cv::Mat grayscale_features(cv::Mat s, int n, cv::Mat img)
             posj2.at<double>(node,0) += pow(j, 2);
             num_pixels.at<double>(node,0) += 1;
         }
-    cv::Mat features(n, FEATURES_GRAYSCALE, CV_64F);
+    cv::Mat features(n, FEATURES_GREYSCALE, CV_64F);
     // color features
     cv::divide(s1, num_pixels, s1);
     cv::divide(s2, num_pixels, s2);
@@ -39,8 +39,8 @@ cv::Mat grayscale_features(cv::Mat s, int n, cv::Mat img)
     cv::Mat std_dev_color = cv::abs(s2 - s1.mul(s1));
     cv::sqrt(std_dev_color, std_dev_color);
     std_dev_color = std_dev_color;
-    avg_color.copyTo(features.col(GRAY_AVG_COLOR));
-    std_dev_color.copyTo(features.col(GRAY_STD_DEV_COLOR));
+    avg_color.copyTo(features.col(GREY_AVG_COLOR));
+    std_dev_color.copyTo(features.col(GREY_STD_DEV_COLOR));
     // positional features
     cv::divide(posi1, num_pixels, posi1);
     cv::divide(posj1, num_pixels, posj1);
@@ -52,12 +52,12 @@ cv::Mat grayscale_features(cv::Mat s, int n, cv::Mat img)
     cv::sqrt(std_dev_centroid_i, std_dev_centroid_i);
     cv::Mat std_dev_centroid_j = cv::abs(posj2 - posj1.mul(posj1));
     cv::sqrt(std_dev_centroid_j, std_dev_centroid_j);
-    centroid_i.copyTo(features.col(GRAY_CENTROID_I));
-    centroid_j.copyTo(features.col(GRAY_CENTROID_J));
-    std_dev_centroid_i.copyTo(features.col(GRAY_STD_DEV_CENTROID_I));
-    std_dev_centroid_j.copyTo(features.col(GRAY_STD_DEV_CENTROID_J));
+    centroid_i.copyTo(features.col(GREY_CENTROID_I));
+    centroid_j.copyTo(features.col(GREY_CENTROID_J));
+    std_dev_centroid_i.copyTo(features.col(GREY_STD_DEV_CENTROID_I));
+    std_dev_centroid_j.copyTo(features.col(GREY_STD_DEV_CENTROID_J));
 
-    num_pixels.copyTo(features.col(GRAY_NUM_PIXELS));
+    num_pixels.copyTo(features.col(GREY_NUM_PIXELS));
 
     return features;
 }
@@ -247,10 +247,10 @@ float spatial_distance(int u, int v, cv::Mat features)
 {
     float d;
     int i,j;
-    if(features.cols == FEATURES_GRAYSCALE)
+    if(features.cols == FEATURES_GREYSCALE)
     {
-        i = GRAY_CENTROID_I;
-        j = GRAY_CENTROID_J;
+        i = GREY_CENTROID_I;
+        j = GREY_CENTROID_J;
     }
     else 
     {
@@ -266,12 +266,12 @@ float feature_distance(int u, int v, cv::Mat features, int img_width, int img_he
 {
     // using normalized avg. color and centroid distance
     float d;
-    if(features.cols == FEATURES_GRAYSCALE)
+    if(features.cols == FEATURES_GREYSCALE)
     {
         int i, j, l;
-        i = GRAY_CENTROID_I;
-        j = GRAY_CENTROID_J;
-        l = GRAY_AVG_COLOR;
+        i = GREY_CENTROID_I;
+        j = GREY_CENTROID_J;
+        l = GREY_AVG_COLOR;
         d =   sqrt((  pow((features.at<double>(u, i) - features.at<double>(v, i))/img_height, 2) 
                     + pow((features.at<double>(u, j) - features.at<double>(v, j))/img_width, 2))/2.0
                     + pow(features.at<double>(u, l) - features.at<double>(v, l), 2));
@@ -489,7 +489,7 @@ static PyObject* compute_features_color(PyObject *self, PyObject *args)
     return Py_BuildValue("OOO", PyArray_Return(features_np), PyArray_Return(edge_index), PyArray_Return(segments));    
 }
 
-static PyObject* compute_features_gray(PyObject *self, PyObject *args)
+static PyObject* compute_features_grey(PyObject *self, PyObject *args)
 {
     PyArrayObject *img_np;
     GraphType graph_type;
@@ -514,7 +514,7 @@ static PyObject* compute_features_gray(PyObject *self, PyObject *args)
     slic->getLabels(s);
     int n = slic->getNumberOfSuperpixels();
 
-    cv::Mat features = grayscale_features(s, n, img);
+    cv::Mat features = greyscale_features(s, n, img);
 
     PyArrayObject *features_np = to_numpy_float64(features);
     if (features_np == NULL)
@@ -534,8 +534,8 @@ static PyObject* compute_features_gray(PyObject *self, PyObject *args)
 static PyMethodDef compute_features_methods[] = {
     {"color_features", compute_features_color, METH_VARARGS, 
      "Computes features for RGB color datasets."},
-    {"grayscale_features", compute_features_gray, METH_VARARGS, 
-     "Computes features for grayscale datasets."}, 
+    {"greyscale_features", compute_features_grey, METH_VARARGS, 
+     "Computes features for greyscale datasets."}, 
     {NULL, NULL, 0, NULL}
 };
 

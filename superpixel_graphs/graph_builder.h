@@ -37,15 +37,15 @@ enum SegmentationMethod
 };
 
 // grayscale features
-#define GRAY_AVG_COLOR 0
-#define GRAY_STD_DEV_COLOR 1
-#define GRAY_CENTROID_I 2
-#define GRAY_CENTROID_J 3
-#define GRAY_STD_DEV_CENTROID_I 4
-#define GRAY_STD_DEV_CENTROID_J 5
-#define GRAY_NUM_PIXELS 6
+#define GREY_AVG_COLOR 0
+#define GREY_STD_DEV_COLOR 1
+#define GREY_CENTROID_I 2
+#define GREY_CENTROID_J 3
+#define GREY_STD_DEV_CENTROID_I 4
+#define GREY_STD_DEV_CENTROID_J 5
+#define GREY_NUM_PIXELS 6
 
-#define FEATURES_GRAYSCALE 7
+define FEATURES_GREYSCALE 7
 
 // color features
 #define COLOR_AVG_COLOR_R 0
@@ -76,7 +76,7 @@ float compute_distance(int u, int v, cv::Mat features, DistanceMeasure distance_
 float feature_distance(int u, int v, cv::Mat features, int img_width, int img_height);
 float spatial_distance(int u, int v, cv::Mat features);
 
-cv::Mat grayscale_features(cv::Mat s, int n, cv::Mat img);
+cv::Mat greyscale_features(cv::Mat s, int n, cv::Mat img);
 cv::Mat color_features(cv::Mat s, int n, cv::Mat img);
 
 cv::Mat from_numpy(PyArrayObject *a);

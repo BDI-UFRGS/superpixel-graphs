@@ -11,7 +11,7 @@ import networkx as nx
 import time
 
 try:
-    from compute_features import grayscale_features
+    from .graph_builder import grayscale_features
 except ImportError:
     extension_availabe = False
 else:
