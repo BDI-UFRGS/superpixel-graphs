@@ -1,19 +1,15 @@
 # Author: Julia Pelayo Rodrigues 
 
 import torch
-import torchvision.datasets as datasets 
-import torchvision.transforms as T
 import numpy as np
-from torch_geometric.data import InMemoryDataset, Data
-from torch_geometric.loader import DataLoader
-import matplotlib.pyplot as plt
+from torch_geometric.data import Data
 from skimage.segmentation import slic
 import skimage as ski
 import networkx as nx
 import time
 
 try:
-    from superpixel_graphs.graph_builder import greyscale_features
+    from superpixel_graphs.graphs.ext import greyscale_features
 except ImportError:
     extension_availabe = False
 else:
@@ -75,4 +71,7 @@ def greyscale_graph(img, label=None, n_segments=75, segmentation_method='SLIC0',
                                                                    compactness)
     posi = greyscale_features_dict['centroid']
     pos = features[:, posi[0] : posi[1]+1]
-    return Data(x=torch.from_numpy(features).to(torch.float), edge_index=torch.from_numpy(edge_index).to(torch.long), pos=torch.from_numpy(pos).to(torch.float), label)
+    return Data(x=torch.from_numpy(features).to(torch.float), edge_index=torch.from_numpy(edge_index).to(torch.long), pos=torch.from_numpy(pos).to(torch.float), y=label)
+
+if __name__ == '__main__':
+    print(extension_availabe)

@@ -45,7 +45,7 @@ enum SegmentationMethod
 #define GREY_STD_DEV_CENTROID_J 5
 #define GREY_NUM_PIXELS 6
 
-define FEATURES_GREYSCALE 7
+#define FEATURES_GREYSCALE 7
 
 // color features
 #define COLOR_AVG_COLOR_R 0
