@@ -1,3 +1,6 @@
-dist
+.vscode 
+.conda
+build 
+dist 
+*.egg-info/
 *.so
-UNKNOWN*
