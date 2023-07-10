@@ -11,13 +11,13 @@ import networkx as nx
 import time
 
 try:
-    from .graph_builder import grayscale_features
+    from superpixel_graphs.graphs.ext import greyscale_features
 except ImportError:
     extension_availabe = False
 else:
     extension_availabe = True
 
-class GrayscaleSLIC(InMemoryDataset):
+class GreyscaleSLIC(InMemoryDataset):
     # base class for grayscale datasets 
     # children must implement 
     # get_ds_name: returns a string with the path to the dataset
@@ -47,7 +47,7 @@ class GrayscaleSLIC(InMemoryDataset):
                     'centroid',
                     'std_deviation_centroid']
     
-    ds_name = 'GrayscaleSLIC'
+    ds_name = 'GreyscaleSLIC'
     
     def __init__(self, 
                  root=None, 
@@ -150,7 +150,7 @@ class GrayscaleSLIC(InMemoryDataset):
             img, y = d
             _, dim0, dim1 = img.shape
             img_np = img.view(dim0, dim1).numpy()
-            features, edge_index, _ = grayscale_features(img_np, 
+            features, edge_index, _ = greyscale_features(img_np, 
                                                          self.n_segments, 
                                                          self.graph_types_dict[self.graph_type], 
                                                          self.slic_methods_dict[self.slic_method], 

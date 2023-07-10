@@ -1,4 +1,4 @@
-from color_slic import ColorSLIC
+from .color_slic import ColorSLIC
 
 import torchvision.datasets as datasets 
 import torchvision.transforms as T

@@ -72,6 +72,3 @@ def greyscale_graph(img, label=None, n_segments=75, segmentation_method='SLIC0',
     posi = greyscale_features_dict['centroid']
     pos = features[:, posi[0] : posi[1]+1]
     return Data(x=torch.from_numpy(features).to(torch.float), edge_index=torch.from_numpy(edge_index).to(torch.long), pos=torch.from_numpy(pos).to(torch.float), y=label)
-
-if __name__ == '__main__':
-    print(extension_availabe)

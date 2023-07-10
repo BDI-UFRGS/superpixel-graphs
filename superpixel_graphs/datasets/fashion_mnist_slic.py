@@ -1,9 +1,9 @@
-from grayscale_slic import GrayscaleSLIC
+from .greyscale_slic import GreyscaleSLIC
 
 import torchvision.datasets as datasets 
 import torchvision.transforms as T
 
-class SuperPixelGraphFashionMNIST(GrayscaleSLIC):
+class SuperPixelGraphFashionMNIST(GreyscaleSLIC):
     ds_name = 'FashionMNIST'
     def get_ds_name(self):
         self.features.sort()
