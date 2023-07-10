@@ -531,7 +531,7 @@ static PyObject* compute_features_grey(PyObject *self, PyObject *args)
     return Py_BuildValue("OOO", PyArray_Return(features_np), PyArray_Return(edge_index), PyArray_Return(segments));    
 }
 
-static PyMethodDef compute_features_methods[] = {
+static PyMethodDef ext_methods[] = {
     {"color_features", compute_features_color, METH_VARARGS, 
      "Computes features for RGB color datasets."},
     {"greyscale_features", compute_features_grey, METH_VARARGS, 
@@ -539,16 +539,16 @@ static PyMethodDef compute_features_methods[] = {
     {NULL, NULL, 0, NULL}
 };
 
-static struct PyModuleDef compute_features_module = {
+static struct PyModuleDef ext_module = {
     PyModuleDef_HEAD_INIT, 
-    "compute_features", 
+    "superpixel_graphs.graphs.ext", 
     NULL, 
     -1,
-    compute_features_methods
+    ext_methods
 };
 
-PyMODINIT_FUNC PyInit_compute_features(void)
+PyMODINIT_FUNC PyInit_ext(void)
 {
     import_array();
-    return PyModule_Create(&compute_features_module);
+    return PyModule_Create(&ext_module);
 }

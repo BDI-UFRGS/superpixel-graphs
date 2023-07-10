@@ -82,3 +82,6 @@ cv::Mat color_features(cv::Mat s, int n, cv::Mat img);
 cv::Mat from_numpy(PyArrayObject *a);
 PyArrayObject *to_numpy_int32(cv::Mat a);
 PyArrayObject *to_numpy_float64(cv::Mat a);
+
+
+PyMODINIT_FUNC PyInit_ext(void);
