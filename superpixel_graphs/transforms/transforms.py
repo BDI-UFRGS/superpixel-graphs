@@ -4,12 +4,9 @@ import torch
 import numpy as np
 from torch_geometric.data import Data
 from skimage.segmentation import slic
-import skimage as ski
-import networkx as nx
-import time
 
 try:
-    from superpixel_graphs.graphs.ext import greyscale_features
+    from superpixel_graphs.graphs.ext import greyscale_features, color_featres
 except ImportError:
     extension_availabe = False
 else:
@@ -55,6 +52,10 @@ std_features = ['avg_color',
                 'std_deviation_centroid']
 
 # computing greyscale graphs 
+
+def ToSuperpixelGraphColor(img, label=None, n_segments=75, segmentation_method='SLIC0', compactness=0.1, graph_type='RAG', selected_features=None):
+    
+
 
 def greyscale_graph(img, label=None, n_segments=75, segmentation_method='SLIC0', compactness=0.1, graph_type='RAG', selected_features=None):
     if extension_availabe:
