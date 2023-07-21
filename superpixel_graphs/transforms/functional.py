@@ -67,6 +67,8 @@ def to_superpixel_graph_greyscale(
         features (List[Feature]): selected features, default is all available, 
             as defined in :class: `superpixel_graphs.transforms.FeatureGreyscale`
 
+    Returns:
+        torch_geometric Data: the resulting graph
     """
     if type(img) == Image.Image:
         img = to_tensor(img)
@@ -101,7 +103,9 @@ def to_superpixel_graph_color(
         graph_type (GraphType): how the graph's neighborhood is defined
         features (List[FeatureColor]): selected features, default is all available, 
             as defined in :class: `superpixel_graphs.transforms.FeatureColor`
-
+            
+    Returns:
+        torch_geometric Data: the resulting graph
     """
     if type(img) == Image.Image:
         img = to_tensor(img)
