@@ -1,0 +1,1 @@
+from .functional import GraphType, SegmentationMethod, FeatureGreyscale, FeatureColor

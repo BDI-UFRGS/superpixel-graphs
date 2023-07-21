@@ -8,82 +8,42 @@ from torch import Tensor
 from torch_geometric.data import Data
 from skimage.segmentation import slic
 
-try:
-    from .ext import greyscale_features, color_featres
-except ImportError:
-    extension_availabe = False
-else:
-    extension_availabe = True
+from .ext import greyscale_features, color_features
 
 class GraphType(Enum):
-    RAG = 'RAG'
-    SPATIAL_1NN  = '1NNSpatial'
-    SPATIAL_2NN  = '2NNSpatial'
-    SPATIAL_4NN  = '4NNSpatial'
-    SPATIAL_8NN  = '8NNSpatial'
-    SPATIAL_16NN = '16NNSpatial'
-    FEATURE_1NN  = '1NNFeature'
-    FEATURE_2NN  = '2NNFeature'
-    FEATURE_4NN  = '4NNFeature'
-    FEATURE_8NN  = '8NNFeature'
-    FEATURE_16NN = '16NNFeature' 
-
-graph_types_mapping = {
-    GraphType.RAG : 0,
-    GraphType.SPATIAL_1NN : 1,
-    GraphType.SPATIAL_2NN : 2,
-    GraphType.SPATIAL_4NN : 3,
-    GraphType.SPATIAL_8NN : 4,
-    GraphType.SPATIAL_16NN: 5,
-    GraphType.FEATURE_1NN : 6,
-    GraphType.FEATURE_2NN : 7,
-    GraphType.FEATURE_4NN : 8,
-    GraphType.FEATURE_8NN : 9,
-    GraphType.FEATURE_16NN: 10 
-}
+    RAG = 0
+    SPATIAL_1NN  = 1
+    SPATIAL_2NN  = 2
+    SPATIAL_4NN  = 3
+    SPATIAL_8NN  = 4
+    SPATIAL_16NN = 5
+    FEATURE_1NN  = 6
+    FEATURE_2NN  = 7
+    FEATURE_4NN  = 8
+    FEATURE_8NN  = 9
+    FEATURE_16NN = 10 
 
 class SegmentationMethod(Enum):
-    SLIC0 = 'SLIC0'
-    SLIC  = 'SLIC'
-    GRID  = 'grid'
+    SLIC0 = 0
+    SLIC  = 1
+    GRID  = 2
 
-segmentation_method_mapping = {
-    SegmentationMethod.SLIC0 : 0,
-    SegmentationMethod.SLIC  : 1,
-    SegmentationMethod.GRID  : 2
-}
+class FeatureGreyscale(Enum):
+    AVG_COLOR = 0
+    STD_DEV_COLOR = 1
+    CENTROID = [2,3]
+    STD_DEV_CENTROID = [4,5]
+    NUM_PIXELS = 6
 
-class Feature(Enum):
-    AVG_COLOR = 'avg_color'
-    STD_DEV_COLOR = 'std_deviation_color'
-    CENTROID = 'centroid'
-    STD_DEV_CENTROID = 'std_deviation_centroid'
-    NUM_PIXELS = 'num_pixels'
-    AVG_COLOR_HSV = 'avg_color_hsv'
-    STD_DEV_HSV = 'std_deviation_hsv'
+class FeatureColor(Enum):
+    AVG_COLOR = [0,1,2]
+    STD_DEV_COLOR = [3,4,5]
+    CENTROID = [6,7]
+    STD_DEV_CENTROID = [8,9]
+    NUM_PIXELS = 10
+    AVG_COLOR_HSV = [11,12,13]
+    STD_DEV_HSV = [14,15,16]
 
-features_mapping_greyscale = {
-    Feature.AVG_COLOR: 0,
-    Feature.STD_DEV_COLOR: 1, 
-    Feature.CENTROID: (2, 3), 
-    Feature.STD_DEV_CENTROID: (4, 5), 
-    Feature.NUM_PIXELS: 6
-}
-
-features_mapping_color = {
-    Feature.AVG_COLOR: (0,1,2),
-    Feature.STD_DEV_COLOR: (3,4,5), 
-    Feature.CENTROID: (6, 7), 
-    Feature.STD_DEV_CENTROID: (8, 9), 
-    Feature.NUM_PIXELS: 10, 
-    Feature.AVG_COLOR_HSV: (11, 12, 13), 
-    Feature.STD_DEV_HSV: (14, 15, 16)
-}
-
-std_features = ['avg_color',
-                'std_deviation_color',
-                'centroid',
-                'std_deviation_centroid']
 
 def to_superpixel_graph_greyscale(
         img: Any, 
@@ -91,7 +51,7 @@ def to_superpixel_graph_greyscale(
         segmentation_method: SegmentationMethod = SegmentationMethod.SLIC0, 
         compactness: float = 0.1, 
         graph_type: GraphType = GraphType.RAG, 
-        features: List[Feature] = None
+        features: List[FeatureGreyscale] = None
 ) -> Data:
     """Transform the given image into a superpixel graph
 
@@ -109,27 +69,11 @@ def to_superpixel_graph_greyscale(
     """
     
     # make sure image is a tensor  
-    if extension_availabe:
-        features, edge_index, segments = greyscale_features(img, 
-                                                            n_segments, 
-                                                            graph_type, 
-                                                            segmentation_method,
-                                                            compactness)
-    else:
-        features, edge_index, segments = _greyscale_features(img, 
-                                                             n_segments, 
-                                                             graph_type, 
-                                                             segmentation_method,
-                                                             compactness)
+    features, edge_index, _= greyscale_features(img, 
+                                                n_segments, 
+                                                graph_type.value, 
+                                                segmentation_method.value,
+                                                compactness)
     posi = features_mapping_greyscale[Feature.CENTROID]
     pos = features[:, posi[0] : posi[1]+1]
     return Data(x=torch.from_numpy(features).to(torch.float), edge_index=torch.from_numpy(edge_index).to(torch.long), pos=torch.from_numpy(pos).to(torch.float), y=label)
-
-def _greyscale_features(
-        img: Any,
-        n_segments: int, 
-        graph_type: GraphType, 
-        sementation_method: SegmentationMethod, 
-        compactness: float
-):
-    return None
