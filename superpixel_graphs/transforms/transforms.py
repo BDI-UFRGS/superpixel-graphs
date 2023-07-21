@@ -1,75 +1,61 @@
 # Author: Julia Pelayo Rodrigues 
 
+from typing import Any, List
 import torch
-import numpy as np
 from torch_geometric.data import Data
-from skimage.segmentation import slic
 
-try:
-    from superpixel_graphs.graphs.ext import greyscale_features, color_featres
-except ImportError:
-    extension_availabe = False
-else:
-    extension_availabe = True
+from . import functional as F
 
-
-# graph types 
-graph_types_dict = {'RAG' : 0,
-                    '1NNSpatial' : 1,
-                    '2NNSpatial' : 2,
-                    '4NNSpatial' : 3,
-                    '8NNSpatial' : 4,
-                    '16NNSpatial': 5,
-                    '1NNFeature' : 6,
-                    '2NNFeature' : 7,
-                    '4NNFeature' : 8,
-                    '8NNFeature' : 9,
-                    '16NNFeature': 10 }
-
-# slic methods
-slic_methods_dict = {'SLIC0': 0,
-                     'SLIC': 1,
-                     'grid': 2 }
-
-# features 
-greyscale_features_dict = {'avg_color': 0,
-                           'std_deviation_color': 1, 
-                           'centroid': (2, 3), 
-                           'std_deviation_centroid': (4, 5), 
-                           'num_pixels': 6}
-
-color_features_dict     = {'avg_color': (0,1,2),
-                           'std_deviation_color': (3,4,5), 
-                           'centroid': (6, 7), 
-                           'std_deviation_centroid': (8, 9), 
-                           'num_pixels': 10, 
-                           'avg_color_hsv': (11, 12, 13), 
-                           'std_deviation_hsv': (14, 15, 16)}
-
-std_features = ['avg_color',
-                'std_deviation_color',
-                'centroid',
-                'std_deviation_centroid']
-
-# computing greyscale graphs 
-
-def ToSuperpixelGraphColor(img, label=None, n_segments=75, segmentation_method='SLIC0', compactness=0.1, graph_type='RAG', selected_features=None):
+class ToSuperpixelGraphGreyscale(torch.nn.Module):
+    def __init__(self, 
+                 n_segments: int = 75, 
+                 segmentation_method: F.SegmentationMethod = F.SegmentationMethod.SLIC0, 
+                 compactness: float = 0.1, 
+                 graph_type: F.GraphType = F.GraphType.RAG, 
+                 features: List[F.FeatureGreyscale] = None
+    ) -> None:
+        super().__init__()
+        self.n_segments = n_segments
+        self.segmentation_method = segmentation_method
+        self.compactness = compactness
+        self.graph_type = graph_type
+        self.features = features
     
+    def forward(self, img:Any) -> Data:
+        return F.to_superpixel_graph_greyscale(img, 
+                                               n_segments=self.n_segments, 
+                                               segmentation_method=self.segmentation_method,
+                                               compactness=self.compactness, 
+                                               graph_type=self.graph_type, 
+                                               features=self.features)
+    
+    def __repr__(self) -> str:
+        detail = f"(n_segments={self.n_segments}, segmentation_method={self.segmentation_method}, graph_type={self.graph_type})"
+        return f"{self.__class__.__name__}{detail}"
 
-
-def greyscale_graph(img, label=None, n_segments=75, segmentation_method='SLIC0', compactness=0.1, graph_type='RAG', selected_features=None):
-    if extension_availabe:
-        features, edge_index, segments = greyscale_features(img, 
-                                                            n_segments, 
-                                                            graph_type, 
-                                                            segmentation_method,
-                                                            compactness)
-    else:
-        features, edge_index, segments = greyscale_features_python(img, 
-                                                                   n_segments, 
-                                                                   graph_type, 
-                                                                   segmentation_method,
-                                                                   compactness)
-    posi = greyscale_features_dict['centroid']
-    pos = features[:, posi[0] : posi[1]+1]
-    return Data(x=torch.from_numpy(features).to(torch.float), edge_index=torch.from_numpy(edge_index).to(torch.long), pos=torch.from_numpy(pos).to(torch.float), y=label)
+class ToSuperpixelGraphColor(torch.nn.Module):
+    def __init__(self, 
+                 n_segments: int = 75, 
+                 segmentation_method: F.SegmentationMethod = F.SegmentationMethod.SLIC0, 
+                 compactness: float = 0.1, 
+                 graph_type: F.GraphType = F.GraphType.RAG, 
+                 features: List[F.FeatureColor] = None
+    ) -> None:
+        super().__init__()
+        self.n_segments = n_segments
+        self.segmentation_method = segmentation_method
+        self.compactness = compactness
+        self.graph_type = graph_type
+        self.features = features
+    
+    def forward(self, img:Any) -> Data:
+        return F.to_superpixel_graph_color(img, 
+                                           n_segments=self.n_segments, 
+                                           segmentation_method=self.segmentation_method,
+                                           compactness=self.compactness, 
+                                           graph_type=self.graph_type, 
+                                           features=self.features)
+    
+    def __repr__(self) -> str:
+        detail = f"(n_segments={self.n_segments}, segmentation_method={self.segmentation_method}, graph_type={self.graph_type})"
+        return f"{self.__class__.__name__}{detail}"
