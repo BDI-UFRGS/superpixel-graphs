@@ -5,6 +5,7 @@ import numpy as np
 import torch
 from PIL import Image
 from torch import Tensor
+from torchvision.transforms.functional import to_tensor
 from torch_geometric.data import Data
 from skimage.segmentation import slic
 
@@ -53,7 +54,7 @@ def to_superpixel_graph_greyscale(
         graph_type: GraphType = GraphType.RAG, 
         features: List[FeatureGreyscale] = None
 ) -> Data:
-    """Transform the given image into a superpixel graph
+    """Transform the given greyscale image into a superpixel graph
 
     Args:
         img(PIL Image or Tensor): Image to be transformed
@@ -64,16 +65,51 @@ def to_superpixel_graph_greyscale(
             `SegmentationMethod.SLIC`
         graph_type (GraphType): how the graph's neighborhood is defined
         features (List[Feature]): selected features, default is all available, 
-            as defined in :class: `superpixel_graphs.transforms.Feature`
+            as defined in :class: `superpixel_graphs.transforms.FeatureGreyscale`
 
     """
-    
-    # make sure image is a tensor  
-    features, edge_index, _= greyscale_features(img, 
+    if type(img) == Image.Image:
+        img = to_tensor(img)
+    _, dim0, dim1 = img.shape
+    img_np = img.view(dim0, dim1).numpy() 
+    features, edge_index, _= greyscale_features(img_np, 
                                                 n_segments, 
                                                 graph_type.value, 
                                                 segmentation_method.value,
                                                 compactness)
-    posi = features_mapping_greyscale[Feature.CENTROID]
-    pos = features[:, posi[0] : posi[1]+1]
-    return Data(x=torch.from_numpy(features).to(torch.float), edge_index=torch.from_numpy(edge_index).to(torch.long), pos=torch.from_numpy(pos).to(torch.float), y=label)
+    pos = features[:, FeatureGreyscale.CENTROID.value]
+    return Data(x=torch.from_numpy(features).to(torch.float), edge_index=torch.from_numpy(edge_index).to(torch.long), pos=torch.from_numpy(pos).to(torch.float))
+
+
+def to_superpixel_graph_color(
+        img: Any, 
+        n_segments: int = 75, 
+        segmentation_method: SegmentationMethod = SegmentationMethod.SLIC0, 
+        compactness: float = 0.1, 
+        graph_type: GraphType = GraphType.RAG, 
+        features: List[FeatureColor] = None
+) -> Data:
+    """Transform the given RGB image into a superpixel graph
+
+    Args:
+        img(PIL Image or Tensor): Image to be transformed
+        n_segments (int): desired number of superpixels/nodes 
+        segmentation_method (SegmentationMethod): desired segmentation method enum 
+            defined by :class: `superpixel_graphs.transforms.SegmentationMethod`
+        compactness (float): SLIC compactness parameter, only used when segmentation_method is
+            `SegmentationMethod.SLIC`
+        graph_type (GraphType): how the graph's neighborhood is defined
+        features (List[FeatureColor]): selected features, default is all available, 
+            as defined in :class: `superpixel_graphs.transforms.FeatureColor`
+
+    """
+    if type(img) == Image.Image:
+        img = to_tensor(img)
+    img_np = torch.stack([img[0], img[1], img[2]], dim=2).numpy()
+    features, edge_index, _= color_features(img_np, 
+                                            n_segments, 
+                                            graph_type.value, 
+                                            segmentation_method.value,
+                                            compactness)
+    pos = features[:, FeatureColor.CENTROID.value]
+    return Data(x=torch.from_numpy(features).to(torch.float), edge_index=torch.from_numpy(edge_index).to(torch.long), pos=torch.from_numpy(pos).to(torch.float))
