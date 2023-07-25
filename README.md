@@ -2,9 +2,6 @@
 
 Parameterizable graph-building from images for [pytorch](https://pytorch.org/) with [PyG](https://pytorch-geometric.readthedocs.io/en/latest/index.html#).
 
-All code currently in this repository was developed by Júlia Rodrigues as part of a
-Federal University of Rio Grande do Sul's (UFRGS) research project.
-
 ## Overview 
 
 The purpose of this package is to provide a fast and customizable way to build graphs from images over-segmented into superpixel so that they can be used as input for Graph Neural Networks in a highly parameterizable manner. 
