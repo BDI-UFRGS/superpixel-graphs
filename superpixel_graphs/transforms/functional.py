@@ -102,7 +102,7 @@ def to_segments_greyscale(
         Array: integer mask indicting superpixel labels 
     """
     if type(img) == Image.Image:
-        img = to_tensor(img)
+        img = to_tensor(img) # to_tensor transforms from PIL img [0,255], (H x W x C) to FloatTensor [0.0,1.0], (C x H x W)
     _, dim0, dim1 = img.shape
     img_np = img.view(dim0, dim1).numpy() 
     _, _, segments = greyscale_features(img_np, 

@@ -399,7 +399,7 @@ cv::Mat from_numpy(PyArrayObject *a)
         img = cv::Mat(rows, cols, CV_32F);
         for(int i=0; i<rows; i++)
             for(int j=0; j<cols; j++)
-                img.at<float>(i, j) = *(float *)PyArray_GETPTR2(a, i, j) * 255;
+                img.at<float>(i, j) = *(float *)PyArray_GETPTR2(a, i, j);
     }
     else  // ndims == 3
     {
@@ -407,9 +407,9 @@ cv::Mat from_numpy(PyArrayObject *a)
         for(int i=0; i<rows; i++)
             for(int j=0; j<cols; j++)
             {
-                img.ptr<float>(i, j)[0] = *(float *)PyArray_GETPTR3(a, i, j, 0) * 255;
-                img.ptr<float>(i, j)[1] = *(float *)PyArray_GETPTR3(a, i, j, 1) * 255;
-                img.ptr<float>(i, j)[2] = *(float *)PyArray_GETPTR3(a, i, j, 2) * 255;
+                img.ptr<float>(i, j)[0] = *(float *)PyArray_GETPTR3(a, i, j, 0);
+                img.ptr<float>(i, j)[1] = *(float *)PyArray_GETPTR3(a, i, j, 1);
+                img.ptr<float>(i, j)[2] = *(float *)PyArray_GETPTR3(a, i, j, 2);
             }
     }
     return img;    
@@ -447,6 +447,7 @@ PyArrayObject *to_numpy_float64(cv::Mat a)
 
 static PyObject* compute_features_color(PyObject *self, PyObject *args)
 {
+    // function parameters
     PyArrayObject *img_np;
     GraphType graph_type;
     SegmentationMethod seg_method;
@@ -454,6 +455,7 @@ static PyObject* compute_features_color(PyObject *self, PyObject *args)
     float compactness;
     if(!PyArg_ParseTuple(args, "O!iii|f", &PyArray_Type, &img_np, &n_segments, &graph_type, &seg_method, &compactness))
         return NULL;
+
 
     cv::Mat img = from_numpy(img_np);
     cv::Mat img_cie_lab;
