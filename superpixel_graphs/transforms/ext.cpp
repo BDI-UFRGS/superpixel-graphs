@@ -389,6 +389,30 @@ PyArrayObject *get_edge_index(cv::Mat s, cv::Mat features, GraphType graph_type,
 
 cv::Mat from_numpy(PyArrayObject *a)
 {
+    if(!PyArray_ISCARRAY(a))
+    {
+        printf("PyArray is not a C style array");
+    }
+    
+    int ndims = PyArray_NDIM(a);
+    int rows = PyArray_DIM(a, 0);
+    int cols = PyArray_DIM(a, 1);
+    float * data = (float*)PyArray_DATA(a);
+
+    if (ndims == 3)
+    {
+        cv::Mat m(rows, cols, CV_32FC3, data);
+        return m;
+    } else 
+    {
+        cv::Mat m(rows, cols, CV_32F, data);
+        return m;
+    }
+
+}
+
+cv::Mat from_numpy_copy(PyArrayObject *a)
+{
     int ndims = PyArray_NDIM(a);
     int rows = PyArray_DIM(a, 0);
     int cols = PyArray_DIM(a, 1);

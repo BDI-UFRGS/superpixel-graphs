@@ -1,5 +1,6 @@
 #include <Python.h>
 #include <numpy/arrayobject.h>
+#include <numpy/ndarraytypes.h>
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
