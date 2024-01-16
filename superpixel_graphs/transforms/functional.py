@@ -154,7 +154,7 @@ def to_segments_greyscale(
         segmentation_method: SegmentationMethod = SegmentationMethod.SLIC0, 
         compactness: float = 0.1, 
         graph_type: GraphType = GraphType.RAG 
-) -> Tuple(Any, Any):
+):
     if type(img) == Image.Image:
         img = to_tensor(img)
     _, dim0, dim1 = img.shape
@@ -172,7 +172,7 @@ def to_segments_color(
         segmentation_method: SegmentationMethod = SegmentationMethod.SLIC0, 
         compactness: float = 0.1, 
         graph_type: GraphType = GraphType.RAG 
-) -> Tuple(Any, Any):
+):
     if type(img) == Image.Image:
         img = to_tensor(img)
     img_np = torch.stack([img[0], img[1], img[2]], dim=2).numpy()
