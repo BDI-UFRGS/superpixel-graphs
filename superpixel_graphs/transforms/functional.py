@@ -82,6 +82,36 @@ def to_superpixel_graph_greyscale(
     pos = features[:, FeatureGreyscale.CENTROID.value]
     return Data(x=torch.from_numpy(features).to(torch.float), edge_index=torch.from_numpy(edge_index).to(torch.long), pos=torch.from_numpy(pos).to(torch.float))
 
+def to_segments_greyscale(
+        img: Any, 
+        n_segments: int = 75, 
+        segmentation_method: SegmentationMethod = SegmentationMethod.SLIC0, 
+        compactness: float = 0.1, 
+) -> Any:
+    """Segmetns the given greyscale image into superpixels 
+
+    Args:
+        img(PIL Image or Tensor): Image to be transformed
+        n_segments (int): desired number of superpixels/nodes 
+        segmentation_method (SegmentationMethod): desired segmentation method enum 
+            defined by :class: `superpixel_graphs.transforms.SegmentationMethod`
+        compactness (float): SLIC compactness parameter, only used when segmentation_method is
+            `SegmentationMethod.SLIC`
+
+    Returns:
+        Array: integer mask indicting superpixel labels 
+    """
+    if type(img) == Image.Image:
+        img = to_tensor(img) # to_tensor transforms from PIL img [0,255], (H x W x C) to FloatTensor [0.0,1.0], (C x H x W)
+    _, dim0, dim1 = img.shape
+    img_np = img.view(dim0, dim1).numpy() 
+    _, _, segments = greyscale_features(img_np, 
+                                        n_segments, 
+                                        GraphType.RAG.value, 
+                                        segmentation_method.value,
+                                        compactness)
+    return segments
+
 
 def to_superpixel_graph_color(
         img: Any, 
