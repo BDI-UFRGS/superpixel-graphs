@@ -117,3 +117,38 @@ def to_superpixel_graph_color(
                                             compactness)
     pos = features[:, FeatureColor.CENTROID.value]
     return Data(x=torch.from_numpy(features).to(torch.float), edge_index=torch.from_numpy(edge_index).to(torch.long), pos=torch.from_numpy(pos).to(torch.float))
+
+def to_segments_greyscale(
+        img: Any, 
+        n_segments: int = 75, 
+        segmentation_method: SegmentationMethod = SegmentationMethod.SLIC0, 
+        compactness: float = 0.1, 
+        graph_type: GraphType = GraphType.RAG 
+) -> Tuple(Any, Any):
+    if type(img) == Image.Image:
+        img = to_tensor(img)
+    _, dim0, dim1 = img.shape
+    img_np = img.view(dim0, dim1).numpy() 
+    _, _, segments = greyscale_features(img_np, 
+                                        n_segments, 
+                                        graph_type.value, 
+                                        segmentation_method.value,
+                                        compactness)
+    return img_np, segments
+
+def to_segments_color(
+        img: Any, 
+        n_segments: int = 75, 
+        segmentation_method: SegmentationMethod = SegmentationMethod.SLIC0, 
+        compactness: float = 0.1, 
+        graph_type: GraphType = GraphType.RAG 
+) -> Tuple(Any, Any):
+    if type(img) == Image.Image:
+        img = to_tensor(img)
+    img_np = torch.stack([img[0], img[1], img[2]], dim=2).numpy()
+    _, _, segments = color_features(img_np, 
+                                    n_segments, 
+                                    graph_type.value, 
+                                    segmentation_method.value,
+                                    compactness)
+    return img_np, segments
