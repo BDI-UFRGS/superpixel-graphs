@@ -89,16 +89,19 @@ cv::Mat color_features(cv::Mat s, int n, cv::Mat img)
             sv2 = cv::Mat::zeros(n, 1, CV_64F);
     int node;
     float colorR, colorG, colorB, colorH, colorS, colorV;
-    for (int i=0; i<img.rows; i++)
-        for (int j=0; j<img.cols; j++)
+    int rows = img.rows;
+    int cols = img.cols;
+    int total_pixels = rows * cols;
+    for (int i=0; i<rows; i++)
+        for (int j=0; j<cols; j++)
         {
             node = s.at<int32_t>(i, j);
-            colorR = rgb[0].at<float>(i, j)/255;
-            colorG = rgb[1].at<float>(i, j)/255;
-            colorB = rgb[2].at<float>(i, j)/255;
-            colorH = hsv[0].at<float>(i, j)/255;
-            colorS = hsv[1].at<float>(i, j)/255;
-            colorV = hsv[2].at<float>(i, j)/255;
+            colorR = rgb[0].at<float>(i, j);
+            colorG = rgb[1].at<float>(i, j);
+            colorB = rgb[2].at<float>(i, j);
+            colorH = hsv[0].at<float>(i, j);
+            colorS = hsv[1].at<float>(i, j);
+            colorV = hsv[2].at<float>(i, j);
             sr1.at<double>(node,0) += colorR;
             sr2.at<double>(node,0) += pow(colorR, 2);
             sg1.at<double>(node,0) += colorG;
@@ -169,10 +172,10 @@ cv::Mat color_features(cv::Mat s, int n, cv::Mat img)
     std_dev_color_v.copyTo(features.col(COLOR_STD_DEV_COLOR_V));
 
     // positional features
-    cv::divide(posi1, num_pixels, posi1);
-    cv::divide(posj1, num_pixels, posj1);
-    cv::divide(posi2, num_pixels, posi2);
-    cv::divide(posj2, num_pixels, posj2);
+    cv::divide(posi1, num_pixels*img.rows, posi1);
+    cv::divide(posj1, num_pixels*img.cols, posj1);
+    cv::divide(posi2, num_pixels*img.rows, posi2);
+    cv::divide(posj2, num_pixels*img.cols, posj2);
     cv::Mat centroid_i = posi1;
     cv::Mat centroid_j = posj1;
     cv::Mat std_dev_centroid_i = cv::abs(posi2 - posi1.mul(posi1));
@@ -184,10 +187,10 @@ cv::Mat color_features(cv::Mat s, int n, cv::Mat img)
     std_dev_centroid_i.copyTo(features.col(COLOR_STD_DEV_CENTROID_I));
     std_dev_centroid_j.copyTo(features.col(COLOR_STD_DEV_CENTROID_J));
 
+    num_pixels = num_pixels/total_pixels;
     num_pixels.copyTo(features.col(COLOR_NUM_PIXELS));
 
     return features;
-
 }
 
 

@@ -145,10 +145,10 @@ def to_superpixel_graph_color(
         img = to_tensor(img)
     img_np = torch.stack([img[0], img[1], img[2]], dim=2).numpy()
     x, edge_index, _= color_features(img_np, 
-                                            n_segments, 
-                                            graph_type.value, 
-                                            segmentation_method.value,
-                                            compactness)
+                                     n_segments, 
+                                     graph_type.value, 
+                                     segmentation_method.value,
+                                     compactness)
     pos = x[:, FeatureColor.CENTROID.value]
     if features:
         feature_mask = []
