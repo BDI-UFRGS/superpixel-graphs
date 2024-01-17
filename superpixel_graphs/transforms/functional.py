@@ -74,13 +74,17 @@ def to_superpixel_graph_greyscale(
         img = to_tensor(img)
     _, dim0, dim1 = img.shape
     img_np = img.view(dim0, dim1).numpy() 
-    features, edge_index, _= greyscale_features(img_np, 
-                                                n_segments, 
-                                                graph_type.value, 
-                                                segmentation_method.value,
-                                                compactness)
+    x, edge_index, _= greyscale_features(img_np, 
+                                         n_segments, 
+                                         graph_type.value, 
+                                         segmentation_method.value,
+                                         compactness)
     pos = features[:, FeatureGreyscale.CENTROID.value]
-    return Data(x=torch.from_numpy(features).to(torch.float), edge_index=torch.from_numpy(edge_index).to(torch.long), pos=torch.from_numpy(pos).to(torch.float))
+    if features:
+        feature_mask = []
+        [feature_mask.extend(feature.value if isinstance(feature.value, list) else [feature.value]) for feature in features]
+        return Data(x=torch.from_numpy(x[:,feature_mask]).to(torch.float), edge_index=torch.from_numpy(edge_index).to(torch.long), pos=torch.from_numpy(pos).to(torch.float))
+    return Data(x=torch.from_numpy(x).to(torch.float), edge_index=torch.from_numpy(edge_index).to(torch.long), pos=torch.from_numpy(pos).to(torch.float))
 
 def to_segments_greyscale(
         img: Any, 
@@ -140,13 +144,18 @@ def to_superpixel_graph_color(
     if type(img) == Image.Image:
         img = to_tensor(img)
     img_np = torch.stack([img[0], img[1], img[2]], dim=2).numpy()
-    features, edge_index, _= color_features(img_np, 
+    x, edge_index, _= color_features(img_np, 
                                             n_segments, 
                                             graph_type.value, 
                                             segmentation_method.value,
                                             compactness)
-    pos = features[:, FeatureColor.CENTROID.value]
-    return Data(x=torch.from_numpy(features).to(torch.float), edge_index=torch.from_numpy(edge_index).to(torch.long), pos=torch.from_numpy(pos).to(torch.float))
+    pos = x[:, FeatureColor.CENTROID.value]
+    if features:
+        feature_mask = []
+        [feature_mask.extend(feature.value if isinstance(feature.value, list) else [feature.value]) for feature in features]
+        return Data(x=torch.from_numpy(x[:,feature_mask]).to(torch.float), edge_index=torch.from_numpy(edge_index).to(torch.long), pos=torch.from_numpy(pos).to(torch.float))
+    else:
+        return Data(x=torch.from_numpy(x).to(torch.float), edge_index=torch.from_numpy(edge_index).to(torch.long), pos=torch.from_numpy(pos).to(torch.float))
 
 def to_segments_greyscale(
         img: Any, 
