@@ -191,3 +191,13 @@ def to_segments_color(
                                     segmentation_method.value,
                                     compactness)
     return img_np, segments
+
+def normalize_color(graph: Data, mean: List[float], std: List[float]) -> Data:
+    color = graph.x[:,:3]
+    mean = torch.as_tensor(mean, dtype=color.dtype, device=color.device)
+    std = torch.as_tensor(std, dtype=color.dtype, device=color.device)
+
+    color = color.sub(mean)
+    color.div_(std)
+    graph.x[:,:3] = color
+    return graph

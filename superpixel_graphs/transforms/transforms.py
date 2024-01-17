@@ -100,3 +100,16 @@ class ToSuperpixelGraphColor(torch.nn.Module):
     def __repr__(self) -> str:
         detail = f"(n_segments={self.n_segments}, segmentation_method={self.segmentation_method}, graph_type={self.graph_type})"
         return f"{self.__class__.__name__}{detail}"
+
+class NormalizeColor(torch.nn.Module):
+    def __init__(self, 
+                 mean: List[float], 
+                 std: List[float]
+    ):
+        
+        super().__init__()
+        self.mean = mean 
+        self.std  = std 
+    
+    def forward(self, graph:Data) -> Data:
+        return F.normalize_color(graph, self.mean, self.std)
