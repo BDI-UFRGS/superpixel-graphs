@@ -140,36 +140,51 @@ cv::Mat color_features(cv::Mat s, int n, cv::Mat img)
     cv::sqrt(std_dev_color_r, std_dev_color_r);
     avg_color_r.copyTo(features.col(COLOR_AVG_COLOR_R));
     std_dev_color_r.copyTo(features.col(COLOR_STD_DEV_COLOR_R));
+    avg_color_r.release();
+    std_dev_color_r.release();
 
     cv::Mat avg_color_g = sg1;
     cv::Mat std_dev_color_g = cv::abs(sg2 - sg1.mul(sg1));
     cv::sqrt(std_dev_color_g, std_dev_color_g);
     avg_color_g.copyTo(features.col(COLOR_AVG_COLOR_G));
     std_dev_color_g.copyTo(features.col(COLOR_STD_DEV_COLOR_G));
+    avg_color_g.release();
+    std_dev_color_g.release();
     
     cv::Mat avg_color_b = sb1;
     cv::Mat std_dev_color_b = cv::abs(sb2 - sb1.mul(sb1));
     cv::sqrt(std_dev_color_b, std_dev_color_b);
     avg_color_b.copyTo(features.col(COLOR_AVG_COLOR_B));
     std_dev_color_b.copyTo(features.col(COLOR_STD_DEV_COLOR_B));
+    avg_color_b.release();
+    std_dev_color_b.release();
     
     cv::Mat avg_color_h = sh1;
     cv::Mat std_dev_color_h = cv::abs(sh2 - sh1.mul(sh1));
     cv::sqrt(std_dev_color_h, std_dev_color_h);
     avg_color_h.copyTo(features.col(COLOR_AVG_COLOR_H));
     std_dev_color_h.copyTo(features.col(COLOR_STD_DEV_COLOR_H));
+    avg_color_h.release();
+    std_dev_color_h.release();
     
     cv::Mat avg_color_s = ss1;
     cv::Mat std_dev_color_s = cv::abs(ss2 - ss1.mul(ss1));
     cv::sqrt(std_dev_color_s, std_dev_color_s);
     avg_color_s.copyTo(features.col(COLOR_AVG_COLOR_S));
     std_dev_color_s.copyTo(features.col(COLOR_STD_DEV_COLOR_S));
+    avg_color_s.release();
+    std_dev_color_s.release();
     
     cv::Mat avg_color_v = sv1;
     cv::Mat std_dev_color_v = cv::abs(sv2 - sv1.mul(sv1));
     cv::sqrt(std_dev_color_v, std_dev_color_v);
     avg_color_v.copyTo(features.col(COLOR_AVG_COLOR_V));
     std_dev_color_v.copyTo(features.col(COLOR_STD_DEV_COLOR_V));
+    avg_color_v.release();
+    std_dev_color_v.release();
+
+    img_hsv.release();
+    hsv.clear(); rgb.clear();
 
     // positional features
     cv::divide(posi1, num_pixels*img.rows, posi1);
@@ -186,9 +201,29 @@ cv::Mat color_features(cv::Mat s, int n, cv::Mat img)
     centroid_j.copyTo(features.col(COLOR_CENTROID_J));
     std_dev_centroid_i.copyTo(features.col(COLOR_STD_DEV_CENTROID_I));
     std_dev_centroid_j.copyTo(features.col(COLOR_STD_DEV_CENTROID_J));
+    centroid_i.release(); centroid_j.release();
+    std_dev_centroid_i.release(); std_dev_centroid_j.release();
 
     num_pixels = num_pixels/total_pixels;
     num_pixels.copyTo(features.col(COLOR_NUM_PIXELS));
+
+    sr1.release();
+    sg1.release();
+    sb1.release();
+    sr2.release();
+    sg2.release();
+    sb2.release();
+    posi1.release();
+    posj1.release();
+    posi2.release();
+    posj2.release();
+    num_pixels.release();
+    sh1.release();
+    ss1.release();
+    sv1.release();
+    sh2.release();
+    ss2.release();
+    sv2.release();
 
     return features;
 }
@@ -387,6 +422,7 @@ PyArrayObject *get_edge_index(cv::Mat s, cv::Mat features, GraphType graph_type,
         *((long *)PyArray_GETPTR2(edge_index, 1, i)) = edge.second;
         i++;
     }
+    adj.clear();
     return edge_index;
 }
 
@@ -501,9 +537,12 @@ static PyObject* compute_features_color(PyObject *self, PyObject *args)
     slic->getLabels(s);
     int n = slic->getNumberOfSuperpixels();
 
+    img_cie_lab.release();
+
     cv::Mat features = color_features(s, n, img);
 
     PyArrayObject *features_np = to_numpy_float64(features);
+    features.release();
     if (features_np == NULL)
         return NULL;
 
@@ -512,6 +551,7 @@ static PyObject* compute_features_color(PyObject *self, PyObject *args)
         return NULL;
     
     PyArrayObject *segments = to_numpy_int32(s);
+    s.release();
     if(segments == NULL)
         return NULL;
 

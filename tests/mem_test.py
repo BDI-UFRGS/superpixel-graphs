@@ -14,9 +14,11 @@ def test(data_loader):
     for X, Y in data_loader:
         X.to('cuda')
         Y.to('cuda')
+        X = None 
+        Y = None
 
 if __name__ == '__main__':
-    iterations = 10 
+    iterations = 1000
 
     preprocess = v2.Compose([
     v2.ToImage(),
@@ -37,14 +39,14 @@ if __name__ == '__main__':
                                                 GT.FeatureColor.STD_DEV_CENTROID])
 
     transform = T.Compose([preprocess, 
-                        data_augmentation]) 
+                        data_augmentation])#, 
                         # graph_transform])
 
-    ds_train = CIFAR10(root='./cifar/train', train=True, transform=transform, download=True)
-    ds_test  = CIFAR10(root='./cifar/test', train=False, transform=transform, download=True)
+    # ds_train = CIFAR10(root='./cifar10/train', train=True, transform=transform, download=True)
+    ds_test  = CIFAR10(root='./cifar10/test', train=False, transform=transform, download=True)
 
     test_loader = DataLoader(ds_test, batch_size=128)
-    train_loader = DataLoader(ds_train, batch_size=128)
+    # train_loader = DataLoader(ds_train, batch_size=128)
 
     for i in range(iterations):
         print(f'Iteration {i}')
