@@ -6,6 +6,12 @@ from torch_geometric.data import Data
 
 from . import functional as F
 
+__all__ = [
+    "ToSuperpixelGraphGreyscale",
+    "ToSuperpixelGraphColor",
+    "NormalizeColor"
+]
+
 class ToSuperpixelGraphGreyscale(torch.nn.Module):
     """Transform the input greyscale image into a superpixel graph
 
