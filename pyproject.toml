@@ -8,3 +8,6 @@ version = "0.01"
 authors = [
   { name="Julia Rodrigues", email="jprodrigues@inf.ufrgs.br" },
 ]
+
+[tool.setuptools]
+packages = ["superpixel_graphs"]
