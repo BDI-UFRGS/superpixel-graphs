@@ -1,0 +1,60 @@
+#!/bin/sh 
+python3 train-model.py -m GAT --n_heads 1 --dataset mnist -f GAT/mnist-graph-types --graph_type RAG 
+python3 train-model.py -m GAT --n_heads 1 --dataset mnist -f GAT/mnist-graph-types --graph_type 1NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset mnist -f GAT/mnist-graph-types --graph_type 2NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset mnist -f GAT/mnist-graph-types --graph_type 4NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset mnist -f GAT/mnist-graph-types --graph_type 8NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset mnist -f GAT/mnist-graph-types --graph_type 16NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset mnist -f GAT/mnist-graph-types --graph_type 1NNFeature 
+python3 train-model.py -m GAT --n_heads 1 --dataset mnist -f GAT/mnist-graph-types --graph_type 2NNFeature 
+python3 train-model.py -m GAT --n_heads 1 --dataset mnist -f GAT/mnist-graph-types --graph_type 4NNFeature 
+python3 train-model.py -m GAT --n_heads 1 --dataset mnist -f GAT/mnist-graph-types --graph_type 8NNFeature 
+python3 train-model.py -m GAT --n_heads 1 --dataset mnist -f GAT/mnist-graph-types --graph_type 16NNFeature 
+
+python3 train-model.py -m GAT --n_heads 1 --dataset fashion_mnist -f GAT/fashion_mnist-graph-types --graph_type RAG 
+python3 train-model.py -m GAT --n_heads 1 --dataset fashion_mnist -f GAT/fashion_mnist-graph-types --graph_type 1NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset fashion_mnist -f GAT/fashion_mnist-graph-types --graph_type 2NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset fashion_mnist -f GAT/fashion_mnist-graph-types --graph_type 4NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset fashion_mnist -f GAT/fashion_mnist-graph-types --graph_type 8NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset fashion_mnist -f GAT/fashion_mnist-graph-types --graph_type 16NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset fashion_mnist -f GAT/fashion_mnist-graph-types --graph_type 1NNFeature 
+python3 train-model.py -m GAT --n_heads 1 --dataset fashion_mnist -f GAT/fashion_mnist-graph-types --graph_type 2NNFeature 
+python3 train-model.py -m GAT --n_heads 1 --dataset fashion_mnist -f GAT/fashion_mnist-graph-types --graph_type 4NNFeature 
+python3 train-model.py -m GAT --n_heads 1 --dataset fashion_mnist -f GAT/fashion_mnist-graph-types --graph_type 8NNFeature 
+python3 train-model.py -m GAT --n_heads 1 --dataset fashion_mnist -f GAT/fashion_mnist-graph-types --graph_type 16NNFeature 
+
+python3 train-model.py -m GAT --n_heads 1 --dataset cifar10 -f GAT/cifar10-graph-types --graph_type RAG 
+python3 train-model.py -m GAT --n_heads 1 --dataset cifar10 -f GAT/cifar10-graph-types --graph_type 1NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset cifar10 -f GAT/cifar10-graph-types --graph_type 2NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset cifar10 -f GAT/cifar10-graph-types --graph_type 4NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset cifar10 -f GAT/cifar10-graph-types --graph_type 8NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset cifar10 -f GAT/cifar10-graph-types --graph_type 16NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset cifar10 -f GAT/cifar10-graph-types --graph_type 1NNFeature 
+python3 train-model.py -m GAT --n_heads 1 --dataset cifar10 -f GAT/cifar10-graph-types --graph_type 2NNFeature 
+python3 train-model.py -m GAT --n_heads 1 --dataset cifar10 -f GAT/cifar10-graph-types --graph_type 4NNFeature 
+python3 train-model.py -m GAT --n_heads 1 --dataset cifar10 -f GAT/cifar10-graph-types --graph_type 8NNFeature 
+python3 train-model.py -m GAT --n_heads 1 --dataset cifar10 -f GAT/cifar10-graph-types --graph_type 16NNFeature 
+
+python3 train-model.py -m GAT --n_heads 1 --dataset cifar100 -f GAT/cifar100-graph-types --graph_type RAG 
+python3 train-model.py -m GAT --n_heads 1 --dataset cifar100 -f GAT/cifar100-graph-types --graph_type 1NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset cifar100 -f GAT/cifar100-graph-types --graph_type 2NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset cifar100 -f GAT/cifar100-graph-types --graph_type 4NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset cifar100 -f GAT/cifar100-graph-types --graph_type 8NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset cifar100 -f GAT/cifar100-graph-types --graph_type 16NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset cifar100 -f GAT/cifar100-graph-types --graph_type 1NNFeature 
+python3 train-model.py -m GAT --n_heads 1 --dataset cifar100 -f GAT/cifar100-graph-types --graph_type 2NNFeature 
+python3 train-model.py -m GAT --n_heads 1 --dataset cifar100 -f GAT/cifar100-graph-types --graph_type 4NNFeature 
+python3 train-model.py -m GAT --n_heads 1 --dataset cifar100 -f GAT/cifar100-graph-types --graph_type 8NNFeature 
+python3 train-model.py -m GAT --n_heads 1 --dataset cifar100 -f GAT/cifar100-graph-types --graph_type 16NNFeature 
+
+python3 train-model.py -m GAT --n_heads 1 --dataset stl10 -f GAT/stl10-graph-types --graph_type RAG 
+python3 train-model.py -m GAT --n_heads 1 --dataset stl10 -f GAT/stl10-graph-types --graph_type 1NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset stl10 -f GAT/stl10-graph-types --graph_type 2NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset stl10 -f GAT/stl10-graph-types --graph_type 4NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset stl10 -f GAT/stl10-graph-types --graph_type 8NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset stl10 -f GAT/stl10-graph-types --graph_type 16NNSpatial 
+python3 train-model.py -m GAT --n_heads 1 --dataset stl10 -f GAT/stl10-graph-types --graph_type 1NNFeature 
+python3 train-model.py -m GAT --n_heads 1 --dataset stl10 -f GAT/stl10-graph-types --graph_type 2NNFeature 
+python3 train-model.py -m GAT --n_heads 1 --dataset stl10 -f GAT/stl10-graph-types --graph_type 4NNFeature 
+python3 train-model.py -m GAT --n_heads 1 --dataset stl10 -f GAT/stl10-graph-types --graph_type 8NNFeature 
+python3 train-model.py -m GAT --n_heads 1 --dataset stl10 -f GAT/stl10-graph-types --graph_type 16NNFeature 
