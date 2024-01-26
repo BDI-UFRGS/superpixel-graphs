@@ -11,7 +11,7 @@ import skimage as ski
 import time
 
 try:
-    from superpixel_graphs.graphs.ext import color_features
+    from superpixel_graphs.transforms.ext import color_features
 except ImportError:
     extension_availabe = False
 else:
