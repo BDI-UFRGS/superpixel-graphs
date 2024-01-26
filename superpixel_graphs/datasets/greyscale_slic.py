@@ -11,7 +11,7 @@ import networkx as nx
 import time
 
 try:
-    from superpixel_graphs.graphs.ext import greyscale_features
+    from superpixel_graphs.transforms.ext import greyscale_features
 except ImportError:
     extension_availabe = False
 else:
